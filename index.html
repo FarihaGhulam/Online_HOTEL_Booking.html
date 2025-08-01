@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grand Luxe Hotel - Booking System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2a4365;
+            --secondary-color: #4299e1;
+            --accent-color: #f6ad55;
+            --text-color: #2d3748;
+            --bg-color: #f7fafc;
+            --card-color: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary-color: #1a365d;
+            --secondary-color: #3182ce;
+            --accent-color: #dd6b20;
+            --text-color: #e2e8f0;
+            --bg-color: #1a202c;
+            --card-color: #2d3748;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+            justify-content: center;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+
+        /* Main Content Styles */
+        main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Auth Container (Login/Register) */
+        .auth-container {
+            max-width: 500px;
+            margin: 2rem auto;
+            background-color: var(--card-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .auth-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .auth-form {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background-color: var(--card-color);
+            color: var(--text-color);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .toggle-form {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .toggle-form button {
+            background: none;
+            border: none;
+            color: var(--secondary-color);
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        /* Admin Dashboard */
+        .admin-panel, .user-dashboard {
+            display: none;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Room Management Table */
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .edit-btn {
+            background-color: #38a169;
+        }
+
+        .delete-btn {
+            background-color: #e53e3e;
+        }
+
+        /* Service Management */
+        .service-form {
+            background-color: var(--card-color);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        /* User Booking Dashboard */
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .room-card {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .room-image {
+            height: 200px;
+            background-color: #eee;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .room-details {
+            padding: 1.5rem;
+        }
+
+        .room-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin: 0.5rem 0;
+        }
+
+        .room-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .feature {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Booking Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: var(--shadow);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            header {
+                padding-top: 3rem;
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .theme-toggle {
+                position: static;
+                margin-left: auto;
+            }
+
+            .auth-form {
+                padding: 1.5rem;
+            }
+
+            .room-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <i class="fas fa-moon"></i>
+        </button>
+        <div class="logo">
+            <i class="fas fa-hotel"></i>
+            <span>The Velvet Heaven</span>
+        </div>
+        <div class="contact-info">
+            <span><i class="fas fa-phone"></i> 03391235050</span>
+            <span><i class="fas fa-envelope"></i> fariya.ghul@gmail.com</span>
+            <span><i class="fas fa-map-marker-alt"></i> 123 Luxury Street, Hospitality City</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Login/Register Section -->
+        <div class="auth-container" id="authContainer">
+            <div class="auth-tabs">
+                <div class="auth-tab active" id="loginTab">Login</div>
+                <div class="auth-tab" id="registerTab">Register</div>
+            </div>
+            <div class="auth-form">
+                <div id="loginForm">
+                    <h2>Welcome Back</h2>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Enter your password">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">I am a</label>
+                        <select id="role">
+                            <option value="guest">Guest</option>
+                            <option value="admin">Hotel Administrator</option>
+                        </select>
+                    </div>
+                    <button type="button" id="loginBtn">Login</button>
+                    <div class="toggle-form">
+                        Don't have an account? <button id="showRegister">Register</button>
+                    </div>
+                </div>
+                <div id="registerForm" style="display: none;">
+                    <h2>Create Account</h2>
+                    <div class="form-group">
+                        <label for="regName">Full Name</label>
+                        <input type="text" id="regName" placeholder="Your full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="regEmail">Email</label>
+                        <input type="email" id="regEmail" placeholder="Your email address">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPhone">Phone Number</label>
+                        <input type="tel" id="regPhone" placeholder="Your phone number">
+                    </div>
+                    <div class="form-group">
+                        <label for="regPassword">Password</label>
+                        <input type="password" id="regPassword" placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label for="regConfirmPassword">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" placeholder="Confirm your password">
+                    </div>
+                    <button type="button" id="registerBtn">Register</button>
+                    <div class="toggle-form">
+                        Already have an account? <button id="showLogin">Login</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Dashboard (Hidden by default) -->
+        <div class="admin-panel" id="adminPanel">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-user-shield"></i> Administrator Dashboard</h2>
+                <button class="logout-btn" id="adminLogout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Occupancy Rate</h3>
+                    <p>78%</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Today's Check-ins</h3>
+                    <p>12</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Available Rooms</h3>
+                    <p>24</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Today's Revenue</h3>
+                    <p>$8,450</p>
+                </div>
+            </div>
+
+            <div class="service-form">
+                <h3>Manage Room Services</h3>
+                <form id="serviceForm">
+                    <input type="hidden" id="serviceId">
+                    <div class="form-group">
+                        <label for="serviceName">Service Name</label>
+                        <input type="text" id="serviceName" placeholder="Enter service name">
+                    </div>
+                    <div class="form-group">
+                        <label for="serviceDescription">Description</label>
+                        <textarea id="serviceDescription" rows="3" placeholder="Enter service description"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="servicePrice">Price ($)</label>
+                        <input type="number" id="servicePrice" placeholder="Enter service price">
+                    </div>
+                    <button type="button" id="saveService">Add Service</button>
+                </form>
+            </div>
+
+            <h3>Room Services</h3>
+            <div class="table-container">
+                <table id="servicesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Service Name</th>
+                            <th>Description</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Services will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Current Bookings</h3>
+            <div class="table-container">
+                <table id="bookingsTable">
+                    <thead>
+                        <tr>
+                            <th>Booking ID</th>
+                            <th>Room Type</th>
+                            <th>Guest Name</th>
+                            <th>Check-in</th>
+                            <th>Check-out</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>B1001</td>
+                            <td>Deluxe King</td>
+                            <td>John Smith</td>
+                            <td>2023-11-15</td>
+                            <td>2023-11-20</td>
+                            <td>Confirmed</td>
+                        </tr>
+                        <tr>
+                            <td>B1002</td>
+                            <td>Executive Suite</td>
+                            <td>Sarah Johnson</td>
+                            <td>2023-11-18</td>
+                            <td>2023-11-22</td>
+                            <td>Confirmed</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- User Booking Dashboard (Hidden by default) -->
+        <div class="user-dashboard" id="userDashboard">
+            <div class="dashboard-header">
+                <h2><i class="fas fa-concierge-bell"></i> Our Room Services</h2>
+                <button class="logout-btn" id="userLogout">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <div class="room-grid">
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="room-details">
+                        <h3>Deluxe King Room</h3>
+                        <p>Spacious room with king bed, work desk, and premium amenities.</p>
+                        <div class="room-features">
+                            <span class="feature">King Bed</span>
+                            <span class="feature">Free WiFi</span>
+                            <span class="feature">Sea View</span>
+                        </div>
+                        <div class="room-price">$299/night</div>
+                        <button class="book-btn" data-room="Deluxe King Room" data-price="299">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="room-details">
+                        <h3>Executive Suite</h3>
+                        <p>Luxurious suite with separate living area and premium services.</p>
+                        <div class="room-features">
+                            <span class="feature">Living Room</span>
+                            <span class="feature">Mini Bar</span>
+                            <span class="feature">Jacuzzi</span>
+                        </div>
+                        <div class="room-price">$499/night</div>
+                        <button class="book-btn" data-room="Executive Suite" data-price="499">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="room-details">
+                        <h3>Family Room</h3>
+                        <p>Comfortable space for families with extra beds and amenities.</p>
+                        <div class="room-features">
+                            <span class="feature">2 Queen Beds</span>
+                            <span class="feature">Kids Amenities</span>
+                            <span class="feature">Play Area</span>
+                        </div>
+                        <div class="room-price">$399/night</div>
+                        <button class="book-btn" data-room="Family Room" data-price="399">Book Now</button>
+                    </div>
+                </div>
+
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('https://images.unsplash.com/photo-1596178065887-1198b6148b2b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+                    <div class="room-details">
+                        <h3>Presidential Suite</h3>
+                        <p>Ultimate luxury with premium services and exclusive access.</p>
+                        <div class="room-features">
+                            <span class="feature">Butler Service</span>
+                            <span class="feature">Private Pool</span>
+                            <span class="feature">VIP Access</span>
+                        </div>
+                        <div class="room-price">$999/night</div>
+                        <button class="book-btn" data-room="Presidential Suite" data-price="999">Book Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeModal">&times;</span>
+            <h2 id="modalRoomTitle">Book Room</h2>
+            <form id="bookingForm">
+                <input type="hidden" id="selectedRoom">
+                <input type="hidden" id="selectedPrice">
+                <div class="form-group">
+                    <label for="bookingName">Full Name</label>
+                    <input type="text" id="bookingName" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingEmail">Email</label>
+                    <input type="email" id="bookingEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="bookingPhone">Phone Number</label>
+                    <input type="tel" id="bookingPhone" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkInDate">Check-in Date</label>
+                    <input type="date" id="checkInDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkOutDate">Check-out Date</label>
+                    <input type="date" id="checkOutDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="guests">Number of Guests</label>
+                    <select id="guests" required>
+                        <option value="1">1 Guest</option>
+                        <option value="2">2 Guests</option>
+                        <option value="3">3 Guests</option>
+                        <option value="4">4 Guests</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Total Price: <span id="totalPrice">$0</span></label>
+                </div>
+                <button type="button" id="confirmBooking">Confirm Booking</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Booking Confirmation Modal -->
+    <div class="modal" id="confirmationModal">
+        <div class="modal-content">
+            <h2>Booking Confirmed!</h2>
+            <p id="confirmationMessage"></p>
+            <button id="closeConfirmation">Close</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="logo">
+                <i class="fas fa-hotel"></i>
+                <span>The Velvet Heaven</span>
+            </div>
+            <p>123 Luxury Street, Hospitality City</p>
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> 03391235050</span>
+                <span><i class="fas fa-envelope"></i> fariya.ghul@gmail.com</span>
+            </div>
+            <div class="social-links">
+                <a href="https://www.facebook.com/share/1CPWr443yQ/" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                <a href="https://www.instagram.com/fareihaghulam093/" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p>&copy; 2023 The Velvet Heaven. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            const icon = themeToggle.querySelector('i');
+            if (body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Check for saved theme preference
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeToggle.querySelector('i').classList.remove('fa-moon');
+            themeToggle.querySelector('i').classList.add('fa-sun');
+        }
+
+        // Auth Tabs
+        const loginTab = document.getElementById('loginTab');
+        const registerTab = document.getElementById('registerTab');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const showRegister = document.getElementById('showRegister');
+        const showLogin = document.getElementById('showLogin');
+
+        loginTab.addEventListener('click', () => {
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
+
+        registerTab.addEventListener('click', () => {
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        });
+
+        showRegister.addEventListener('click', () => {
+            registerTab.click();
+        });
+
+        showLogin.addEventListener('click', () => {
+            loginTab.click();
+        });
+
+        // Login System
+        const authContainer = document.getElementById('authContainer');
+        const adminPanel = document.getElementById('adminPanel');
+        const userDashboard = document.getElementById('userDashboard');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const adminLogout = document.getElementById('adminLogout');
+        const userLogout = document.getElementById('userLogout');
+
+        // Mock users database
+        const users = [
+            {
+                email: 'admin@luxehotel.com',
+                password: 'Admin@1234',
+                name: 'Hotel Admin',
+                role: 'admin'
+            },
+            {
+                email: 'guest@example.com',
+                password: 'Guest@123',
+                name: 'John Traveler',
+                role: 'guest'
+            }
+        ];
+
+        // Login function
+        loginBtn.addEventListener('click', () => {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            // Validate fields
+            if (!email || !password) {
+                alert('Please enter both email and password');
+                return;
+            }
+
+            // Find user
+            const user = users.find(u => u.email === email && u.password === password && u.role === role);
+            
+            if (user) {
+                authContainer.style.display = 'none';
+                
+                if (role === 'admin') {
+                    adminPanel.style.display = 'block';
+                    renderServicesTable();
+                } else {
+                    userDashboard.style.display = 'block';
+                }
+            } else {
+                alert('Invalid credentials or role mismatch');
+            }
+        });
+
+        // Register function
+        registerBtn.addEventListener('click', () => {
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const phone = document.getElementById('regPhone').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+
+            // Validate
+            if (!name || !email || !phone || !password || !confirmPassword) {
+                alert('Please fill all fields');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+
+            // Check if user exists
+            if (users.some(u => u.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+
+            // Add new user (in a real app, this would be a server request)
+            users.push({
+                email,
+                password,
+                name,
+                phone,
+                role: 'guest'
+            });
+
+            alert('Registration successful! Please login.');
+            loginTab.click();
+        });
+
+        // Logout functionality
+        adminLogout.addEventListener('click', () => {
+            adminPanel.style.display = 'none';
+            authContainer.style.display = 'block';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        userLogout.addEventListener('click', () => {
+            userDashboard.style.display = 'none';
+            authContainer.style.display = 'block';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        // Service Management
+        const serviceForm = document.getElementById('serviceForm');
+        const serviceId = document.getElementById('serviceId');
+        const serviceName = document.getElementById('serviceName');
+        const serviceDescription = document.getElementById('serviceDescription');
+        const servicePrice = document.getElementById('servicePrice');
+        const saveService = document.getElementById('saveService');
+        const servicesTable = document.getElementById('servicesTable').getElementsByTagName('tbody')[0];
+
+        // Room Services Data
+        let services = [
+            {
+                id: 1,
+                name: "Daily Housekeeping",
+                description: "Professional cleaning service every day",
+                price: 0
+            },
+            {
+                id: 2,
+                name: "Airport Transfer",
+                description: "Private car to/from airport",
+                price: 50
+            },
+            {
+                id: 3,
+                name: "Spa Package",
+                description: "Full spa treatment for two",
+                price: 150
+            },
+            {
+                id: 4,
+                name: "Breakfast Buffet",
+                description: "Unlimited breakfast for room guests",
+                price: 25
+            }
+        ];
+
+        function renderServicesTable() {
+            servicesTable.innerHTML = '';
+            services.forEach(service => {
+                const row = servicesTable.insertRow();
+                row.innerHTML = `
+                    <td>${service.id}</td>
+                    <td>${service.name}</td>
+                    <td>${service.description}</td>
+                    <td>$${service.price}</td>
+                    <td class="action-buttons">
+                        <button class="action-btn edit-btn" onclick="editService(${service.id})">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteService(${service.id})">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+            });
+        }
+
+        window.editService = function(id) {
+            const service = services.find(s => s.id === id);
+            if (service) {
+                serviceId.value = service.id;
+                serviceName.value = service.name;
+                serviceDescription.value = service.description;
+                servicePrice.value = service.price;
+                saveService.textContent = 'Update Service';
+                window.scrollTo({ top: serviceForm.offsetTop, behavior: 'smooth' });
+            }
+        };
+
+        window.deleteService = function(id) {
+            if (confirm('Are you sure you want to delete this service?')) {
+                services = services.filter(s => s.id !== id);
+                renderServicesTable();
+            }
+        };
+
+        saveService.addEventListener('click', () => {
+            if (!serviceName.value || !servicePrice.value) {
+                alert('Please fill in required fields');
+                return;
+            }
+
+            const service = {
+                id: serviceId.value ? parseInt(serviceId.value) : services.length + 1,
+                name: serviceName.value,
+                description: serviceDescription.value,
+                price: parseFloat(servicePrice.value)
+            };
+
+            if (serviceId.value) {
+                // Update existing service
+                const index = services.findIndex(s => s.id === service.id);
+                if (index !== -1) {
+                    services[index] = service;
+                }
+            } else {
+                // Add new service
+                services.push(service);
+            }
+
+            // Reset form
+            serviceForm.reset();
+            serviceId.value = '';
+            saveService.textContent = 'Add Service';
+            renderServicesTable();
+        });
+
+        // Booking System Code
+const bookingModal = document.getElementById('bookingModal');
+const closeModal = document.getElementById('closeModal');
+const modalRoomTitle = document.getElementById('modalRoomTitle');
+const selectedRoom = document.getElementById('selectedRoom');
+const selectedPrice = document.getElementById('selectedPrice');
+const totalPrice = document.getElementById('totalPrice');
+const checkInDate = document.getElementById('checkInDate');
+const checkOutDate = document.getElementById('checkOutDate');
+const confirmBooking = document.getElementById('confirmBooking');
+const confirmationModal = document.getElementById('confirmationModal');
+const confirmationMessage = document.getElementById('confirmationMessage');
+const closeConfirmation = document.getElementById('closeConfirmation');
+const bookingsTable = document.getElementById('bookingsTable').getElementsByTagName('tbody')[0];
+
+// Set minimum date to today
+const today = new Date().toISOString().split('T')[0];
+checkInDate.min = today;
+
+// Update check-out date minimum when check-in date changes
+checkInDate.addEventListener('change', () => {
+    checkOutDate.min = checkInDate.value;
+    calculateTotal();
+});
+
+checkOutDate.addEventListener('change', calculateTotal);
+
+function calculateTotal() {
+    if (checkInDate.value && checkOutDate.value) {
+        const pricePerNight = parseFloat(selectedPrice.value);
+        const checkIn = new Date(checkInDate.value);
+        const checkOut = new Date(checkOutDate.value);
+        const nights = (checkOut - checkIn) / (1000 * 60 * 60 * 24);
+        const total = pricePerNight * nights;
+        totalPrice.textContent = `$${total.toFixed(2)}`;
+    }
+}
+
+// Book Now buttons - Add click handlers to all book buttons
+document.querySelectorAll('.book-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const room = this.getAttribute('data-room');
+        const price = this.getAttribute('data-price');
+        modalRoomTitle.textContent = `Book ${room}`;
+        selectedRoom.value = room;
+        selectedPrice.value = price;
+        bookingModal.style.display = 'flex';
+        
+        // Reset form when opening modal
+        document.getElementById('bookingForm').reset();
+        totalPrice.textContent = '$0';
+        checkInDate.min = new Date().toISOString().split('T')[0];
+        checkOutDate.min = '';
+    });
+});
+
+// Close modal buttons
+closeModal.addEventListener('click', () => {
+    bookingModal.style.display = 'none';
+});
+
+closeConfirmation.addEventListener('click', () => {
+    confirmationModal.style.display = 'none';
+});
+
+// Close modals when clicking outside
+window.addEventListener('click', (e) => {
+    if (e.target === bookingModal) {
+        bookingModal.style.display = 'none';
+    }
+    if (e.target === confirmationModal) {
+        confirmationModal.style.display = 'none';
+    }
+});
+
+// Confirm booking button
+confirmBooking.addEventListener('click', () => {
+    const name = document.getElementById('bookingName').value;
+    const email = document.getElementById('bookingEmail').value;
+    const phone = document.getElementById('bookingPhone').value;
+    const checkIn = checkInDate.value;
+    const checkOut = checkOutDate.value;
+    const guests = document.getElementById('guests').value;
+    const room = selectedRoom.value;
+    const price = totalPrice.textContent;
+
+    // Validate all required fields
+    if (!name || !email || !phone || !checkIn || !checkOut) {
+        alert('Please fill in all required fields');
+        return;
+    }
+
+    // Generate booking ID (in real app, this would come from server)
+    const bookingId = 'B' + Math.floor(1000 + Math.random() * 9000);
+    
+    // Add to admin bookings table
+    const newRow = bookingsTable.insertRow();
+    newRow.innerHTML = `
+        <td>${bookingId}</td>
+        <td>${room}</td>
+        <td>${name}</td>
+        <td>${checkIn}</td>
+        <td>${checkOut}</td>
+        <td>Confirmed</td>
+    `;
+
+    // Show confirmation message
+    confirmationMessage.innerHTML = `
+        <p>Thank you for your booking, ${name}!</p>
+        <p><strong>Booking ID:</strong> ${bookingId}</p>
+        <p><strong>Room:</strong> ${room}</p>
+        <p><strong>Check-in:</strong> ${checkIn}</p>
+        <p><strong>Check-out:</strong> ${checkOut}</p>
+        <p><strong>Total:</strong> ${price}</p>
+        <p>A confirmation has been sent to ${email}</p>
+    `;
+
+    // Close booking modal and show confirmation
+    bookingModal.style.display = 'none';
+    confirmationModal.style.display = 'flex';
+    
+    // Reset form for next booking
+    document.getElementById('bookingForm').reset();
+    totalPrice.textContent = '$0';
+});
+
+        // Initialize services table on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderServicesTable();
+        });
+    </script>
+</body>
+</html>
