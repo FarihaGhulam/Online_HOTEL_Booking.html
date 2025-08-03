@@ -1,9 +1,9 @@
 # Online_HOTEL_Booking.html
 ✅ Sample Admin Login (for local testing)
 
-Email: admin@velvetheaven.com
+Email: admin@luxehotel.com
 
-Password: admin123
+Password: Admin@1234
 
 Role: Hotel Administrator
 
